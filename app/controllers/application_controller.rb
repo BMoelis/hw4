@@ -1,7 +1,14 @@
 class ApplicationController < ActionController::Base
-  before_action :current_user
+  before_action :set_current_user
 
-  def current_user
-    puts "------------------ code before every request ------------------"
+  def set_current_user
+    @current_user = User.find_by(id: session["user_id"])
+  end
+
+  def authenticate_user
+    if @current_user.nil?
+      flash["notice"] = "You must be logged in to view this page."
+      redirect_to "/login"
+    end
   end
 end
